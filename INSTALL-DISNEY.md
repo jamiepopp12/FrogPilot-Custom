@@ -6,9 +6,9 @@ comma's installer URL (`https://installer.comma.ai/...` and `FrogPilot.download`
 
 ## Which branch to install
 
-Install **`cursor/disney-theme-f72d`**. That is the Disney branch. It is rebased onto upstream `FrogPilot` when that rebase is clean.
+Install **`cursor/disney-theme-f72d`**. That is the Disney branch. A nightly Action rebases it onto upstream `FrogPilot` and pushes only when that rebase is clean. GitHub runs scheduled workflows from the repo's default branch, so that workflow file is also on `FrogPilot` and on the current default branch.
 
-**`FrogPilot`** in this repo is the stock release branch for comma 3, comma 3X, and comma four, including Toyota. It does not contain the Disney theme. Use it only to roll back. Do not install `FrogPilot-GM-CSLC`. That branch is for GM cars.
+**`FrogPilot`** here is upstream's release branch for comma 3, comma 3X, and comma four, including Toyota, plus that one workflow file. It does not contain the Disney theme. Use it to roll back inside this repo, or use public `FrogPilot.download` for a checkout with no extra file. Do not install `FrogPilot-GM-CSLC`. That branch is for GM cars. The importer left it as the default branch, and the token used here cannot change the default (GitHub returned 403). In the repo settings, set the default branch to **FrogPilot**.
 
 ## Back up settings first
 
