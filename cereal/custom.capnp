@@ -39,6 +39,10 @@ struct FrogPilotCarControl {
       startup @20;
       thisIsFine @21;
       uwu @22;
+
+      # Private Disney theme. go is green light / lead departing only.
+      go @23;
+      shutdown @24;
     }
   }
 }
