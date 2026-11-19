@@ -1,0 +1,78 @@
+name: Rebase custom branch
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: custom-rebase
+  cancel-in-progress: false
+
+jobs:
+  rebase:
+    name: Rebase onto upstream FrogPilot
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Refuse to run outside this repo
+        shell: bash
+        run: |
+          set -euo pipefail
+          repo="${GITHUB_REPOSITORY,,}"
+          case "$repo" in
+            frogai/*)
+              echo "Refusing to run in FrogAi/FrogPilot."
+              exit 1
+              ;;
+            jamiepopp12/frogpilot-custom)
+              ;;
+            *)
+              echo "Refusing to run in ${GITHUB_REPOSITORY}."
+              exit 1
+              ;;
+          esac
+
+      - name: Checkout custom
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: custom
+          persist-credentials: true
+
+      - name: Rebase onto upstream FrogPilot
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          origin_url="$(git remote get-url origin)"
+          case "$origin_url" in
+            *FrogAi/FrogPilot*|*frogai/FrogPilot*)
+              echo "Refusing to push to FrogAi/FrogPilot."
+              exit 1
+              ;;
+          esac
+
+          git config user.name "custom-rebase"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add upstream https://github.com/FrogAi/FrogPilot.git
+          git fetch upstream FrogPilot
+
+          previous="$(git rev-parse HEAD)"
+          if ! git rebase upstream/FrogPilot; then
+            echo "Rebase hit a conflict. custom was not pushed."
+            git rebase --abort || true
+            exit 1
+          fi
+
+          if [[ "$(git rev-parse HEAD)" == "$previous" ]]; then
+            echo "custom already contains upstream FrogPilot. Nothing to push."
+            exit 0
+          fi
+
+          # Push only custom, and only after a clean rebase.
+          # Never update FrogPilot, the default branch.
+          git push --force-with-lease=custom:"$previous" origin HEAD:refs/heads/custom
