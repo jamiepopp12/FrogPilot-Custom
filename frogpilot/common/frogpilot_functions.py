@@ -17,6 +17,7 @@ from openpilot.system.hardware import HARDWARE, PC
 from openpilot.frogpilot.system.model_manager import ModelManager
 from openpilot.frogpilot.assets.theme_manager import ThemeManager
 from openpilot.frogpilot.common import frogpilot_backups, frogpilot_paths, frogpilot_utilities, frogpilot_variables
+from openpilot.frogpilot.common.custom_theme import BOOT_DIR, BOOT_INDEX, CUSTOM_THEME_KEY, SELECTED_MARKER, SOURCE_DIR, cycle_boot_logo, install_user_theme
 
 def cleanup_error_logs():
   for error_log in sorted(frogpilot_paths.ERROR_LOGS_PATH.glob("*.log"))[:-frogpilot_variables.MAX_ERROR_LOGS]:
@@ -226,6 +227,41 @@ def restore_settings(source):
   convert_guam_maps_selection()
   convert_model_stop_time()
 
+def install_custom_theme():
+  if PC:
+    return
+
+  try:
+    pack = install_user_theme(SOURCE_DIR, frogpilot_paths.THEME_PACKS_PATH, frogpilot_paths.STEERING_WHEELS_PATH, CUSTOM_THEME_KEY)
+    marker = pack / SELECTED_MARKER
+    if marker.is_file():
+      return
+
+    frogpilot_variables.params.put_bool("CustomThemes", True)
+    frogpilot_variables.params.put_bool("RandomThemes", False)
+    frogpilot_variables.params.put("SoundPack", CUSTOM_THEME_KEY)
+    frogpilot_variables.params.put("SignalAnimation", CUSTOM_THEME_KEY)
+    frogpilot_variables.params.put("WheelIcon", CUSTOM_THEME_KEY)
+    # These two chimes stay off until Custom Alerts is on. Turn them on once
+    # so the go sound has something to play. Later boots do not reset this.
+    frogpilot_variables.params.put_bool("CustomAlerts", True)
+    frogpilot_variables.params.put_bool("GreenLightAlert", True)
+    frogpilot_variables.params.put_bool("LeadDepartingAlert", True)
+    marker.touch()
+  except Exception:
+    return
+
+def cycle_custom_boot_logo(advance=False):
+  try:
+    if PC:
+      return
+
+    applied = cycle_boot_logo(BOOT_DIR, BOOT_INDEX, advance, update_boot_logo)
+    if applied is None and not advance:
+      update_boot_logo(frogpilot_paths.FROGPILOT_BOOT_LOGO_PATH)
+  except Exception:
+    return
+
 def setup_frogpilot(build_metadata):
   frogpilot_paths.ERROR_LOGS_PATH.mkdir(parents=True, exist_ok=True)
   frogpilot_paths.HD_LOGS_PATH.mkdir(parents=True, exist_ok=True)
@@ -240,7 +276,8 @@ def setup_frogpilot(build_metadata):
   if frogpilot_paths.UNIT_PATH.is_file():
     remove_tailscale_service()
 
-  update_boot_logo(frogpilot_paths.FROGPILOT_BOOT_LOGO_PATH)
+  install_custom_theme()
+  cycle_custom_boot_logo(advance=False)
 
   if build_metadata.channel == frogpilot_variables.DEVELOPMENT_BRANCH and frogpilot_paths.FROGS_GO_MOO_PATH.is_file():
     frogpilot_utilities.run_cmd(["sudo", "mount", "-o", "remount,rw", "/persist"], "Successfully remounted /persist as read-write", "Failed to remount /persist")

@@ -435,13 +435,19 @@ class ThemeManager:
     randomize_theme |= previous_holiday_theme != "stock" and not frogpilot_toggles.random_themes_holidays
 
     if self.holiday_theme != "stock":
+      def pinned(param):
+        # Keep Custom Parks when a holiday theme would otherwise replace it.
+        if self.params.get(param, encoding="utf-8") == frogpilot_variables.CUSTOM_THEME_KEY:
+          return frogpilot_variables.CUSTOM_THEME_KEY
+        return self.holiday_theme
+
       asset_mappings = {
-        "color_scheme": ("colors", self.holiday_theme),
-        "distance_icons": ("distance_icons", self.holiday_theme),
-        "icon_pack": ("icons", self.holiday_theme),
-        "sound_pack": ("sounds", self.holiday_theme),
-        "turn_signal_pack": ("signals", self.holiday_theme),
-        "wheel_image": ("wheel_image", self.holiday_theme)
+        "color_scheme": ("colors", pinned("ColorScheme")),
+        "distance_icons": ("distance_icons", pinned("DistanceIconPack")),
+        "icon_pack": ("icons", pinned("IconPack")),
+        "sound_pack": ("sounds", pinned("SoundPack")),
+        "turn_signal_pack": ("signals", pinned("SignalAnimation")),
+        "wheel_image": ("wheel_image", pinned("WheelIcon"))
       }
     elif (boot_run or randomize_theme) and frogpilot_toggles.random_themes:
       available_themes = self.get_full_themes()
@@ -577,7 +583,7 @@ class ThemeManager:
     else:
       current_wheels = None
 
-    if self.holiday_theme != "stock":
+    if self.holiday_theme != "stock" and image != frogpilot_variables.CUSTOM_THEME_KEY:
       source_file = self.get_wheel_path(image, frogpilot_paths.HOLIDAY_THEMES_PATH / self.holiday_theme / "steering_wheel")
     elif random_event:
       source_file = self.get_wheel_path(image, frogpilot_paths.RANDOM_EVENTS_PATH / "steering_wheels")
