@@ -15,7 +15,7 @@ from openpilot.common.swaglog import cloudlog
 from openpilot.system import micd
 
 from openpilot.frogpilot.common import frogpilot_paths, frogpilot_variables
-from openpilot.frogpilot.common.disney_personal import select_go_clip
+from openpilot.frogpilot.common.custom_theme import select_go_clip
 
 SAMPLE_RATE = 48000
 SAMPLE_BUFFER = 4096 # (approx 100ms)

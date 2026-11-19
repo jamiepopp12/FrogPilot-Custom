@@ -26,7 +26,7 @@ from openpilot.system.version import get_build_metadata
 from panda import Panda
 
 from openpilot.frogpilot.common import frogpilot_paths, frogpilot_utilities
-from openpilot.frogpilot.common.disney_personal import DISNEY_THEME_KEY
+from openpilot.frogpilot.common.custom_theme import CUSTOM_THEME_KEY
 
 params = Params()
 params_cache = Params("/cache/params")
@@ -2044,9 +2044,9 @@ class FrogPilotVariables:
       holiday_name = toggle.current_holiday_theme
 
       def holiday_value(param):
-        # The personal Disney pack stays installed while a holiday theme is in season.
-        if self.params.get(param, encoding="utf-8") == DISNEY_THEME_KEY:
-          return DISNEY_THEME_KEY
+        # Keep Custom Parks installed while a holiday theme is in season.
+        if self.params.get(param, encoding="utf-8") == CUSTOM_THEME_KEY:
+          return CUSTOM_THEME_KEY
         return holiday_name
 
       toggle.color_scheme = holiday_value("ColorScheme")

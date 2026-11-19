@@ -436,9 +436,9 @@ class ThemeManager:
 
     if self.holiday_theme != "stock":
       def pinned(param):
-        # Keep the personal Disney pack when a holiday theme would otherwise replace it.
-        if self.params.get(param, encoding="utf-8") == frogpilot_variables.DISNEY_THEME_KEY:
-          return frogpilot_variables.DISNEY_THEME_KEY
+        # Keep Custom Parks when a holiday theme would otherwise replace it.
+        if self.params.get(param, encoding="utf-8") == frogpilot_variables.CUSTOM_THEME_KEY:
+          return frogpilot_variables.CUSTOM_THEME_KEY
         return self.holiday_theme
 
       asset_mappings = {
@@ -583,7 +583,7 @@ class ThemeManager:
     else:
       current_wheels = None
 
-    if self.holiday_theme != "stock" and image != frogpilot_variables.DISNEY_THEME_KEY:
+    if self.holiday_theme != "stock" and image != frogpilot_variables.CUSTOM_THEME_KEY:
       source_file = self.get_wheel_path(image, frogpilot_paths.HOLIDAY_THEMES_PATH / self.holiday_theme / "steering_wheel")
     elif random_event:
       source_file = self.get_wheel_path(image, frogpilot_paths.RANDOM_EVENTS_PATH / "steering_wheels")

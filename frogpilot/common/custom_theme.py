@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
-"""Private Disney theme install and boot-logo cycle.
+"""Personal theme install and boot-logo cycle for this fork.
 
-Personal fork only. Do not submit this theme to The Pond or any FrogPilot
-theme sharing. Driving, controls, and safety code do not live here.
+Do not submit this theme to The Pond or any FrogPilot theme sharing.
+Driving, controls, and safety code do not live here.
 """
 from pathlib import Path
 
-# Theme Maker builds this key from the name "Disney Parks".
-DISNEY_THEME_KEY = "disney_parks-user_created"
+# Theme Maker builds this key from the name "Custom Parks".
+CUSTOM_THEME_KEY = "custom_parks-user_created"
 GREEN_LIGHT_TEXT = "Light Turned Green"
 BOOT_LOGOS = ("boot_logo_C.jpg", "boot_logo_D.jpg", "boot_logo_E.jpg")
 
-SOURCE_DIR = Path(__file__).resolve().parents[1] / "assets/disney_theme"
-BOOT_DIR = Path(__file__).resolve().parents[1] / "assets/other_images/disney_boot"
-BOOT_INDEX = Path("/data/disney_boot_index")
-SELECTED_MARKER = ".disney_selected"
+SOURCE_DIR = Path(__file__).resolve().parents[1] / "assets/custom_theme"
+BOOT_DIR = Path(__file__).resolve().parents[1] / "assets/other_images/custom_boot"
+BOOT_INDEX = Path("/data/custom_boot_index")
+SELECTED_MARKER = ".custom_selected"
 
 
 def select_go_clip(alert_text, full_clip_played, full_clip, sparkle_clip):

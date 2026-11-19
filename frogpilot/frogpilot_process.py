@@ -350,7 +350,7 @@ def frogpilot_thread():
 
     elif not started and started_previously:
       # Next boot shows the next castle. Offroad only; the helper skips PCs and fails quietly.
-      frogpilot_functions.cycle_disney_boot_logo(advance=True)
+      frogpilot_functions.cycle_custom_boot_logo(advance=True)
 
       run_update_checks = True
 
