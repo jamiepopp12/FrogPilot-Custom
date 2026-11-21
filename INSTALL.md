@@ -40,9 +40,7 @@ After reboot, setup copies the theme to `/data/themes/theme_packs/custom_parks-u
 - Going from onroad to offroad plays the shutdown sound.
 - The first green light of each drive plays the full go sound. Later green lights, and lead departing, play the engage sound. Other prompt and warning sounds are unchanged.
 - Holiday themes do not replace the Custom Parks sound pack, turn signals, or wheel while those three settings still point at Custom Parks. Colors and icons can still follow the holiday. Turn **Holiday Themes** off to stop that too.
-- The boot logo cycles C, then D, then E, one step each time the car goes offroad. The files installed are the packed 1080×2160 JPEGs, which match the frog boot logo.
-
-If the castle is sideways, copy `frogpilot/assets/other_images/custom_boot/variants/boot_logo_{C,D,E}_rot90cw.jpg` over `boot_logo_{C,D,E}.jpg` in that same folder (keep the short names) and reboot. If it is a small picture in the middle, those packed files were replaced by the `*_land.jpg` masters. See `frogpilot/assets/other_images/custom_boot/README.md`.
+- The boot logo is only `boot_logo_C.jpg`, a 1080×2160 JPEG in the same center-band layout as the frog logo. It does not cycle. See `frogpilot/assets/other_images/custom_boot/README.md`.
 
 Restore the settings backup with **FrogPilot → Data → Settings Backups → RESTORE** if you want the previous choices back. A few settings need a reboot after restore.
 

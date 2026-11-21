@@ -22,5 +22,23 @@
     "green": 163,
     "blue": 46,
     "alpha": 255
+  },
+  "Sidebar1": {
+    "red": 23,
+    "green": 134,
+    "blue": 68,
+    "alpha": 255
+  },
+  "Sidebar2": {
+    "red": 23,
+    "green": 134,
+    "blue": 68,
+    "alpha": 255
+  },
+  "Sidebar3": {
+    "red": 23,
+    "green": 134,
+    "blue": 68,
+    "alpha": 255
   }
 }
