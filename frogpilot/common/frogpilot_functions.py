@@ -17,7 +17,7 @@ from openpilot.system.hardware import HARDWARE, PC
 from openpilot.frogpilot.system.model_manager import ModelManager
 from openpilot.frogpilot.assets.theme_manager import ThemeManager
 from openpilot.frogpilot.common import frogpilot_backups, frogpilot_paths, frogpilot_utilities, frogpilot_variables
-from openpilot.frogpilot.common.custom_theme import BOOT_DIR, BOOT_INDEX, CUSTOM_THEME_KEY, SELECTED_MARKER, SOURCE_DIR, cycle_boot_logo, install_user_theme
+from openpilot.frogpilot.common.custom_theme import BOOT_DIR, BOOT_INDEX, CUSTOM_THEME_KEY, SELECTED_MARKER, SELECTED_VERSION, SOURCE_DIR, cycle_boot_logo, install_user_theme
 
 def cleanup_error_logs():
   for error_log in sorted(frogpilot_paths.ERROR_LOGS_PATH.glob("*.log"))[:-frogpilot_variables.MAX_ERROR_LOGS]:
@@ -234,7 +234,7 @@ def install_custom_theme():
   try:
     pack = install_user_theme(SOURCE_DIR, frogpilot_paths.THEME_PACKS_PATH, frogpilot_paths.STEERING_WHEELS_PATH, CUSTOM_THEME_KEY)
     marker = pack / SELECTED_MARKER
-    if marker.is_file():
+    if marker.is_file() and marker.read_text().strip() == SELECTED_VERSION:
       return
 
     frogpilot_variables.params.put_bool("CustomThemes", True)
@@ -242,12 +242,14 @@ def install_custom_theme():
     frogpilot_variables.params.put("SoundPack", CUSTOM_THEME_KEY)
     frogpilot_variables.params.put("SignalAnimation", CUSTOM_THEME_KEY)
     frogpilot_variables.params.put("WheelIcon", CUSTOM_THEME_KEY)
+    frogpilot_variables.params.put("ColorScheme", CUSTOM_THEME_KEY)
+    frogpilot_variables.params.put("IconPack", CUSTOM_THEME_KEY)
     # These two chimes stay off until Custom Alerts is on. Turn them on once
     # so the go sound has something to play. Later boots do not reset this.
     frogpilot_variables.params.put_bool("CustomAlerts", True)
     frogpilot_variables.params.put_bool("GreenLightAlert", True)
     frogpilot_variables.params.put_bool("LeadDepartingAlert", True)
-    marker.touch()
+    marker.write_text(SELECTED_VERSION + "\n")
   except Exception:
     return
 

@@ -15,6 +15,8 @@ SOURCE_DIR = Path(__file__).resolve().parents[1] / "assets/custom_theme"
 BOOT_DIR = Path(__file__).resolve().parents[1] / "assets/other_images/custom_boot"
 BOOT_INDEX = Path("/data/custom_boot_index")
 SELECTED_MARKER = ".custom_selected"
+# Bump when setup should re-apply the theme choices on a device that already selected them.
+SELECTED_VERSION = "2"
 
 
 def select_go_clip(alert_text, full_clip_played, full_clip, sparkle_clip):
@@ -56,7 +58,7 @@ def cycle_boot_logo(boot_dir, index_path, advance, apply_logo):
 def install_user_theme(source, theme_packs, steering_wheels, key):
   """Copy the pack into FrogPilot's user-theme directories. Returns the pack path."""
   pack = theme_packs / key
-  for component in ("sounds", "signals"):
+  for component in ("sounds", "signals", "colors", "icons"):
     destination = pack / component
     destination.mkdir(parents=True, exist_ok=True)
     for path in (source / component).iterdir():
