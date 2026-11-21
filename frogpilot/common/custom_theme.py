@@ -9,14 +9,14 @@ from pathlib import Path
 # Theme Maker builds this key from the name "Custom Parks".
 CUSTOM_THEME_KEY = "custom_parks-user_created"
 GREEN_LIGHT_TEXT = "Light Turned Green"
-BOOT_LOGOS = ("boot_logo_C.jpg", "boot_logo_D.jpg", "boot_logo_E.jpg")
+BOOT_LOGOS = ("boot_logo_C.jpg",)
 
 SOURCE_DIR = Path(__file__).resolve().parents[1] / "assets/custom_theme"
 BOOT_DIR = Path(__file__).resolve().parents[1] / "assets/other_images/custom_boot"
 BOOT_INDEX = Path("/data/custom_boot_index")
 SELECTED_MARKER = ".custom_selected"
 # Bump when setup should re-apply the theme choices on a device that already selected them.
-SELECTED_VERSION = "6"
+SELECTED_VERSION = "7"
 
 
 def select_go_clip(alert_text, full_clip_played, full_clip, sparkle_clip):
