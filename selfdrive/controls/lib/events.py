@@ -351,7 +351,12 @@ def always_on_lateral_waiting_alert(CP: car.CarParams, CS: car.CarState, sm: mes
 
 
 def custom_startup_alert(CP: car.CarParams, CS: car.CarState, sm: messaging.SubMaster, metric: bool, soft_disable_time: int, frogpilot_toggles: SimpleNamespace) -> Alert:
-  return StartupAlert(frogpilot_toggles.startup_alert_top, frogpilot_toggles.startup_alert_bottom, alert_status=FrogPilotAlertStatus.frogpilot)
+  # Personal fork: play startup.wav on every drive, not only while a holiday theme is on.
+  return Alert(
+    frogpilot_toggles.startup_alert_top,
+    frogpilot_toggles.startup_alert_bottom,
+    FrogPilotAlertStatus.frogpilot, AlertSize.mid,
+    Priority.LOWER, VisualAlert.none, FrogPilotAudibleAlert.startup, 5.)
 
 
 def forcing_stop_alert(CP: car.CarParams, CS: car.CarState, sm: messaging.SubMaster, metric: bool, soft_disable_time: int, frogpilot_toggles: SimpleNamespace) -> Alert:
@@ -370,11 +375,12 @@ def forcing_stop_alert(CP: car.CarParams, CS: car.CarState, sm: messaging.SubMas
 
 
 def holiday_alert(CP: car.CarParams, CS: car.CarState, sm: messaging.SubMaster, metric: bool, soft_disable_time: int, frogpilot_toggles: SimpleNamespace) -> Alert:
+  # The startup alert already plays startup.wav. Keep the greeting text, skip a second play.
   return Alert(
     frogpilot_toggles.holiday_greeting,
     "",
     AlertStatus.normal, AlertSize.small,
-    Priority.LOWEST, VisualAlert.none, FrogPilotAudibleAlert.startup, 5.)
+    Priority.LOWEST, VisualAlert.none, AudibleAlert.none, 5.)
 
 
 def nnff_loaded_alert(CP: car.CarParams, CS: car.CarState, sm: messaging.SubMaster, metric: bool, soft_disable_time: int, frogpilot_toggles: SimpleNamespace) -> Alert:
@@ -1070,7 +1076,7 @@ FROGPILOT_EVENTS: dict[int, dict[str, Alert | AlertCallbackType]] = {
       "Light Turned Green",
       "",
       FrogPilotAlertStatus.frogpilot, AlertSize.small,
-      Priority.MID, VisualAlert.none, AudibleAlert.prompt, 3.),
+      Priority.MID, VisualAlert.none, FrogPilotAudibleAlert.go, 3.),
   },
 
   FrogPilotEventName.holidayActive: {
@@ -1090,7 +1096,7 @@ FROGPILOT_EVENTS: dict[int, dict[str, Alert | AlertCallbackType]] = {
       "Lead Departed",
       "",
       FrogPilotAlertStatus.frogpilot, AlertSize.small,
-      Priority.MID, VisualAlert.none, AudibleAlert.prompt, 3.),
+      Priority.MID, VisualAlert.none, FrogPilotAudibleAlert.go, 3.),
   },
 
   FrogPilotEventName.nnffLoaded: {

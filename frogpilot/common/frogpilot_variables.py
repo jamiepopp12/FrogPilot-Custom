@@ -26,6 +26,7 @@ from openpilot.system.version import get_build_metadata
 from panda import Panda
 
 from openpilot.frogpilot.common import frogpilot_paths, frogpilot_utilities
+from openpilot.frogpilot.common.disney_personal import DISNEY_THEME_KEY
 
 params = Params()
 params_cache = Params("/cache/params")
@@ -1229,7 +1230,7 @@ THEME_SIGNAL_STYLES = ("static", "traditional")
 THEME_SLOTS = {
   "distance_icons": ("aggressive", "relaxed", "standard", "traffic"),
   "icons": ("button_flag", "button_home", "button_settings"),
-  "sounds": ("disengage", "engage", "prompt", "prompt_distracted", "refuse", "startup", "warning_immediate", "warning_soft")
+  "sounds": ("disengage", "engage", "go", "prompt", "prompt_distracted", "refuse", "shutdown", "startup", "warning_immediate", "warning_soft")
 }
 
 TINYGRAD_COMBINED_FILES = [
@@ -2040,12 +2041,20 @@ class FrogPilotVariables:
     toggle.current_holiday_theme = holiday_theme if toggle.holiday_themes else "stock"
     toggle.holiday_greeting = HOLIDAY_GREETINGS.get(toggle.current_holiday_theme, "")
     if toggle.current_holiday_theme != "stock":
-      toggle.color_scheme = toggle.current_holiday_theme
-      toggle.distance_icons = toggle.current_holiday_theme
-      toggle.icon_pack = toggle.current_holiday_theme
-      toggle.signal_icons = toggle.current_holiday_theme
-      toggle.sound_pack = toggle.current_holiday_theme
-      toggle.wheel_image = toggle.current_holiday_theme
+      holiday_name = toggle.current_holiday_theme
+
+      def holiday_value(param):
+        # The personal Disney pack stays installed while a holiday theme is in season.
+        if self.params.get(param, encoding="utf-8") == DISNEY_THEME_KEY:
+          return DISNEY_THEME_KEY
+        return holiday_name
+
+      toggle.color_scheme = holiday_value("ColorScheme")
+      toggle.distance_icons = holiday_value("DistanceIconPack")
+      toggle.icon_pack = holiday_value("IconPack")
+      toggle.signal_icons = holiday_value("SignalAnimation")
+      toggle.sound_pack = holiday_value("SoundPack")
+      toggle.wheel_image = holiday_value("WheelIcon")
 
     honda_nidec_longitudinal = toggle.openpilot_longitudinal and toggle.is_honda_nidec
     toggle.honda_alt_tune = self.get_value("HondaAltTune", condition=honda_nidec_longitudinal)
