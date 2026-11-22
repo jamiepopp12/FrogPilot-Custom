@@ -8,7 +8,6 @@ from pathlib import Path
 
 # Theme Maker builds this key from the name "Custom Parks".
 CUSTOM_THEME_KEY = "custom_parks-user_created"
-GREEN_LIGHT_TEXT = "Light Turned Green"
 BOOT_LOGOS = ("boot_logo_C.jpg",)
 
 SOURCE_DIR = Path(__file__).resolve().parents[1] / "assets/custom_theme"
@@ -16,16 +15,7 @@ BOOT_DIR = Path(__file__).resolve().parents[1] / "assets/other_images/custom_boo
 BOOT_INDEX = Path("/data/custom_boot_index")
 SELECTED_MARKER = ".custom_selected"
 # Bump when setup should re-apply the theme choices on a device that already selected them.
-SELECTED_VERSION = "10"
-
-
-def select_go_clip(alert_text, full_clip_played, full_clip, sparkle_clip):
-  """Play the full go clip on the first green light of a drive, then the sparkle."""
-  if alert_text == GREEN_LIGHT_TEXT and not full_clip_played and full_clip is not None:
-    return full_clip, True
-  if sparkle_clip is not None:
-    return sparkle_clip, full_clip_played
-  return full_clip, full_clip_played
+SELECTED_VERSION = "11"
 
 
 def cycle_boot_logo(boot_dir, index_path, advance, apply_logo):

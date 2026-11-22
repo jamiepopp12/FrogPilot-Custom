@@ -15,8 +15,6 @@ from openpilot.common.swaglog import cloudlog
 from openpilot.system import micd
 
 from openpilot.frogpilot.common import frogpilot_paths, frogpilot_variables
-from openpilot.frogpilot.common.custom_theme import select_go_clip
-
 SAMPLE_RATE = 48000
 SAMPLE_BUFFER = 4096 # (approx 100ms)
 MAX_VOLUME = 1.0
@@ -88,9 +86,6 @@ class Soundd:
     # FrogPilot variables
     self.openpilot_crashed_played = False
     self.drive_started = False
-    self.go_full_played = False
-    self.go_full_clip = None
-    self.engage_clip = None
 
     self.theme_update_count = 0
 
@@ -142,8 +137,6 @@ class Soundd:
       self.current_alert = AudibleAlert.none
 
     self.loaded_sounds = loaded_sounds
-    self.go_full_clip = loaded_sounds.get(FrogPilotAudibleAlert.go)
-    self.engage_clip = loaded_sounds.get(AudibleAlert.engage)
 
   def get_sound_data(self, frames): # get "frames" worth of data from the current alert sound, looping when required
 
@@ -211,15 +204,6 @@ class Soundd:
       new_frogpilot_alert = sm['frogpilotControlsState'].alertSound.raw
 
       if new_alert == AudibleAlert.none and new_frogpilot_alert in self.loaded_sounds:
-        if new_frogpilot_alert == FrogPilotAudibleAlert.go and self.current_alert != FrogPilotAudibleAlert.go:
-          clip, self.go_full_played = select_go_clip(
-            sm['frogpilotControlsState'].alertText1,
-            self.go_full_played,
-            self.go_full_clip,
-            self.engage_clip,
-          )
-          if clip is not None:
-            self.loaded_sounds[FrogPilotAudibleAlert.go] = clip
         new_alert = new_frogpilot_alert
 
       self.update_alert(new_alert)
@@ -268,8 +252,6 @@ class Soundd:
           stream = self.update_frogpilot_sounds(sd, stream)
 
         started = sm['deviceState'].started
-        if started and not self.drive_started:
-          self.go_full_played = False
 
         self.get_audible_alert(sm)
 
