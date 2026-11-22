@@ -296,7 +296,9 @@ class Soundd:
       AudibleAlert.warningImmediate: self.frogpilot_toggles.warning_immediate_volume,
 
       FrogPilotAudibleAlert.goat: self.frogpilot_toggles.prompt_volume,
-      FrogPilotAudibleAlert.startup: self.frogpilot_toggles.engage_volume,
+      # Startup shares the engage slider, whose default 101 is Auto and can
+      # play well below full scale in a quiet cabin. Keep this alert at max.
+      FrogPilotAudibleAlert.startup: 100,
       FrogPilotAudibleAlert.go: self.frogpilot_toggles.prompt_volume,
       FrogPilotAudibleAlert.shutdown: self.frogpilot_toggles.disengage_volume,
     }

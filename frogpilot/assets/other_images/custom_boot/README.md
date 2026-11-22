@@ -1,7 +1,7 @@
 # Boot logo
 
-`boot_logo_C.jpg` is the only file copied to `/usr/comma/bg.jpg`. It is a 1080×2160 JPEG, the same size as `stock_bg.jpg` and `frogpilot_boot_logo.jpg`. Setup always uses this one image.
+`boot_logo_C.jpg` is the only file copied to `/usr/comma/bg.jpg`. It is 1080×2160, the same size as `stock_bg.jpg`.
 
-The comma 3X splash is Weston's `scale-crop` of that file onto the 2160×1080 screen. The crop keeps the center 540 rows and scales them by 2. The comma mark and the frog sit in that band, drawn upright. This castle is placed the same way: the 2160×1080 artwork, scaled to 1080×540, pasted at y=810. A 2160×1080 file is the wrong canvas. On the device it showed the castle split across the left and right edges, upside down, with the wordmark mirrored.
+On this comma 3X the splash shows that whole file, small in the landscape screen, rotated 90° clockwise. The castle top in an upright portrait file points to the right. This file is the landscape artwork rotated 90° counter-clockwise so that turn puts the castle upright and full-frame. `variants/boot_logo_C_nopictures_land.jpg` is the landscape master. `variants/boot_logo_C_nopictures.jpg` is this portrait file.
 
-`variants/boot_logo_C_nopictures_land.jpg` is the landscape master. `variants/boot_logo_C_nopictures.jpg` is the installed 1080×2160 file. The older `*_land.jpg` and `*_rot90cw.jpg` masters are not installed.
+The comma mark in `stock_bg.jpg` is drawn horizontal in the tall file. That matches an older center-crop splash, not the rotation this device applies.
