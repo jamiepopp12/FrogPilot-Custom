@@ -16,7 +16,7 @@ BOOT_DIR = Path(__file__).resolve().parents[1] / "assets/other_images/custom_boo
 BOOT_INDEX = Path("/data/custom_boot_index")
 SELECTED_MARKER = ".custom_selected"
 # Bump when setup should re-apply the theme choices on a device that already selected them.
-SELECTED_VERSION = "9"
+SELECTED_VERSION = "10"
 
 
 def select_go_clip(alert_text, full_clip_played, full_clip, sparkle_clip):
