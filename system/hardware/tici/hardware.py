@@ -380,7 +380,7 @@ class Tici(HardwareBase):
         self._amp_mute_timer = None
       if powersave_enabled:
         amp = self.amplifier
-        mute_timer = threading.Timer(2.0, lambda: amp.set_global_shutdown(amp_disabled=True))
+        mute_timer = threading.Timer(3.0, lambda: amp.set_global_shutdown(amp_disabled=True))
         mute_timer.daemon = True
         self._amp_mute_timer = mute_timer
         mute_timer.start()
