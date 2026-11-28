@@ -15,7 +15,7 @@ BOOT_DIR = Path(__file__).resolve().parents[1] / "assets/other_images/custom_boo
 BOOT_INDEX = Path("/data/custom_boot_index")
 SELECTED_MARKER = ".custom_selected"
 # Bump when setup should re-apply the theme choices on a device that already selected them.
-SELECTED_VERSION = "13"
+SELECTED_VERSION = "14"
 
 
 def cycle_boot_logo(boot_dir, index_path, advance, apply_logo):
