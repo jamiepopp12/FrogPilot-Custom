@@ -15,7 +15,6 @@ from openpilot.common.swaglog import cloudlog
 from openpilot.system import micd
 
 from openpilot.frogpilot.common import frogpilot_paths, frogpilot_variables
-
 SAMPLE_RATE = 48000
 SAMPLE_BUFFER = 4096 # (approx 100ms)
 MAX_VOLUME = 1.0
@@ -60,6 +59,8 @@ sound_list: dict[Any, tuple[str, int | None, float]] = {
   FrogPilotAudibleAlert.startup: ("startup.wav", 1, MAX_VOLUME),
   FrogPilotAudibleAlert.thisIsFine: ("this_is_fine.wav", 1, MAX_VOLUME),
   FrogPilotAudibleAlert.uwu: ("uwu.wav", 1, MAX_VOLUME),
+  FrogPilotAudibleAlert.go: ("go.wav", 1, MAX_VOLUME),
+  FrogPilotAudibleAlert.shutdown: ("shutdown.wav", 1, MAX_VOLUME),
 }
 
 def check_controls_timeout_alert(sm):
@@ -84,6 +85,7 @@ class Soundd:
 
     # FrogPilot variables
     self.openpilot_crashed_played = False
+    self.drive_started = False
 
     self.theme_update_count = 0
 
@@ -119,7 +121,7 @@ class Soundd:
       elif sounds_path.exists():
         wavefile = wave.open(str(sounds_path), 'r')
       else:
-        if filename == "startup.wav":
+        if filename in ("startup.wav", "go.wav", "shutdown.wav"):
           filename = "engage.wav"
         wavefile = wave.open(BASEDIR + "/selfdrive/assets/sounds/" + filename, 'r')
 
@@ -227,7 +229,7 @@ class Soundd:
     # sounddevice must be imported after forking processes
     import sounddevice as sd
 
-    sm = messaging.SubMaster(['controlsState', 'microphone', 'frogpilotControlsState', 'frogpilotPlan'])
+    sm = messaging.SubMaster(['controlsState', 'deviceState', 'microphone', 'frogpilotControlsState', 'frogpilotPlan'])
 
     with self.get_stream(sd) as stream:
       rk = Ratekeeper(20)
@@ -249,7 +251,13 @@ class Soundd:
 
           stream = self.update_frogpilot_sounds(sd, stream)
 
+        started = sm['deviceState'].started
+
         self.get_audible_alert(sm)
+
+        if self.drive_started and not started and FrogPilotAudibleAlert.shutdown in self.loaded_sounds:
+          self.update_alert(FrogPilotAudibleAlert.shutdown)
+        self.drive_started = started
 
         rk.keep_time()
 
@@ -270,7 +278,11 @@ class Soundd:
       AudibleAlert.warningImmediate: self.frogpilot_toggles.warning_immediate_volume,
 
       FrogPilotAudibleAlert.goat: self.frogpilot_toggles.prompt_volume,
-      FrogPilotAudibleAlert.startup: self.frogpilot_toggles.engage_volume
+      # These two share the Auto sliders, which can sit well below full scale.
+      # Keep both at max.
+      FrogPilotAudibleAlert.startup: 100,
+      FrogPilotAudibleAlert.go: self.frogpilot_toggles.prompt_volume,
+      FrogPilotAudibleAlert.shutdown: 100,
     }
     self.alert_volumes = {alert: volume / 100.0 for alert, volume in volumes.items() if volume <= 100}
 

@@ -2,6 +2,7 @@ import json
 import math
 import os
 import subprocess
+import threading
 import time
 import tempfile
 from enum import IntEnum
@@ -371,10 +372,20 @@ class Tici(HardwareBase):
       return 0
 
   def set_power_save(self, powersave_enabled):
-    # amplifier, 100mW at idle
+    # amplifier, 100mW at idle. Mute is delayed so the goodbye clip can finish.
     if self.amplifier is not None:
-      self.amplifier.set_global_shutdown(amp_disabled=powersave_enabled)
-      if not powersave_enabled:
+      mute_timer = getattr(self, "_amp_mute_timer", None)
+      if mute_timer is not None:
+        mute_timer.cancel()
+        self._amp_mute_timer = None
+      if powersave_enabled:
+        amp = self.amplifier
+        mute_timer = threading.Timer(3.0, lambda: amp.set_global_shutdown(amp_disabled=True))
+        mute_timer.daemon = True
+        self._amp_mute_timer = mute_timer
+        mute_timer.start()
+      else:
+        self.amplifier.set_global_shutdown(amp_disabled=False)
         self.amplifier.initialize_configuration(self.get_device_type())
 
     # *** CPU config ***

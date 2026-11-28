@@ -39,6 +39,10 @@ struct FrogPilotCarControl {
       startup @20;
       thisIsFine @21;
       uwu @22;
+
+      # Custom theme. go is green light and lead departing only.
+      go @23;
+      shutdown @24;
     }
   }
 }

@@ -349,6 +349,9 @@ def frogpilot_thread():
       waiting_for_car_params = True
 
     elif not started and started_previously:
+      # Next boot shows the next castle. Offroad only; the helper skips PCs and fails quietly.
+      frogpilot_functions.cycle_custom_boot_logo(advance=True)
+
       run_update_checks = True
 
       frogpilot_planner.frogpilot_vcruise.slc.close()
